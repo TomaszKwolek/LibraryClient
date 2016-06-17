@@ -1,0 +1,17 @@
+library\client\javafx\http\client\HttpClient.class
+library\client\javafx\controller\BookSearchController$4$1.class
+library\client\javafx\controller\BookSearchController$4.class
+library\client\javafx\dataprovider\DataProvider.class
+library\client\javafx\model\State.class
+library\client\javafx\controller\BookSearchController$3.class
+library\client\javafx\dataprovider\data\BookVO.class
+library\client\javafx\model\BookSearch.class
+library\client\javafx\controller\BookSearchController$1$1.class
+library\client\javafx\model\BookEntity.class
+library\client\javafx\dataprovider\data\StateVO.class
+library\client\javafx\controller\BookSearchController$2.class
+library\client\javafx\controller\BookSearchController.class
+library\client\javafx\Startup.class
+library\client\javafx\controller\BookSearchController$5.class
+library\client\javafx\controller\BookSearchController$1.class
+library\client\javafx\dataprovider\impl\DataProviderImpl.class

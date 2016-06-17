@@ -1,0 +1,30 @@
+http://localhost:8080/webstore/rest/findAll
+
+http://localhost:8080/webstore/rest/findById?id=1
+
+http://localhost:8080/webstore/rest/findById?id=60
+
+http://localhost:8080/webstore/rest/findByTitleAndAuthor/?title=F&author=J
+
+http://localhost:8080/webstore/rest/findByTitleAndAuthor/?title=&author=
+
+http://localhost:8080/webstore/rest/add
+
+{
+	"id": 4,
+    "title": "Java",
+    "authors": "Jan Kowalski",
+    "status": "FREE"
+  }
+  
+  http://localhost:8080/webstore/rest/update
+
+{
+	"id": 4,
+    "title": "Java",
+    "authors": "Jan Kowalski",
+    "status": "FREE"
+  }
+  
+  http://localhost:8080/webstore/rest/delete?id=1
+  

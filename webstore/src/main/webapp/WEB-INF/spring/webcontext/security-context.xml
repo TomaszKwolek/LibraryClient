@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+<!--
+<import resource="classpath:spring/database-context.xml" />
+
+	<security:http auto-config="true" use-expressions="true">
+		<security:intercept-url pattern="/books/add" access="hasRole('ROLE_ADMIN', 'ROLE_TECH_ADMIN')" />
+		<security:intercept-url pattern="/books/remove" access="hasRole('ROLE_TECH_ADMIN')" />
+		<security:form-login login-page="/login"
+			default-target-url="/books" 
+			authentication-failure-url="/loginfailed" 
+			username-parameter="username"
+			password-parameter="password"/>
+		<security:logout logout-success-url="/logout" />
+		<security:access-denied-handler
+			error-page="/403" />
+	</security:http>
+
+	
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource" 
+				users-by-username-query=
+				"select userName, password from users where username= ?"
+				 authorities-by-username-query=
+				"select userName, role from user_roles where username = ?" />
+		</security:authentication-provider>
+	</security:authentication-manager> -->
+
+<security:http auto-config="true">
+		<security:intercept-url pattern="/books/add" access="ROLE_ADMIN, ROLE_TECH_ADMIN" />
+		<security:intercept-url pattern="/books/remove" access="ROLE_TECH_ADMIN" />
+		<security:form-login login-page="/login"
+			default-target-url="/books" authentication-failure-url="/loginfailed" />
+		<security:logout logout-success-url="/logout" />
+		<security:access-denied-handler
+			error-page="/403" />
+	</security:http>
+
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="tech_admin" password="tech"
+					authorities="ROLE_TECH_ADMIN" />
+				<security:user name="admin" password="admin"
+					authorities="ROLE_ADMIN" />
+				<security:user name="user" password="user"
+					authorities="ROLE_USER" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>
