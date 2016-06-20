@@ -26,7 +26,7 @@ public class HttpClient {
     		param2=author;
     	}
     	
-        URL url = new URL("http://localhost:8080/webstore/rest//findByTitleAndAuthor?title="+param1+"&author="+param2);
+        URL url = new URL("http://localhost:8080/webstore/rest/findByTitleAndAuthor?title="+param1+"&author="+param2);
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -37,7 +37,7 @@ public class HttpClient {
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
         
-        if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
+        if (con.getResponseCode() != HttpURLConnection.HTTP_OK && con.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
             throw new RuntimeException("Failed : HTTP error code : "
                 + con.getResponseCode());
         }

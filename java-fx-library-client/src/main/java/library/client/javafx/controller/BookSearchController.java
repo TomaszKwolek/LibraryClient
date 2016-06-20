@@ -1,12 +1,9 @@
 package library.client.javafx.controller;
 
-import java.awt.List;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
-
-import org.apache.log4j.Logger;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -37,8 +34,6 @@ import library.client.javafx.model.BookSearch;
 import library.client.javafx.model.State;
 
 public class BookSearchController {
-
-	private static final Logger LOG = Logger.getLogger(BookSearchController.class);
 
 	@FXML
 	private ResourceBundle resources;
@@ -173,10 +168,10 @@ public class BookSearchController {
 
 			@Override
 			public void changed(ObservableValue<? extends BookVO> observable, BookVO oldValue, BookVO newValue) {
-				idSelectedBook = newValue.getId().toString();
 				deleteButton.setVisible(idSelectedBook != null);
 
 				if (newValue != null) {
+					idSelectedBook = newValue.getId().toString();
 					Task<Void> backgroundTask = new Task<Void>() {
 
 						@Override
