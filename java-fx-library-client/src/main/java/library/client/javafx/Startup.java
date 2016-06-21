@@ -36,7 +36,6 @@ public class Startup extends Application {
 		//scene.getStylesheets().add(getClass().getResource("/library/client/javafx/css/alternative.css").toExternalForm());
 
 		primaryStage.setScene(scene);
-
 		primaryStage.show();
 	}
 }

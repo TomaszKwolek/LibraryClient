@@ -1,6 +1,7 @@
 package library.client.javafx.http.client;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -8,23 +9,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import library.client.exception.HttpRequestException;
 import library.client.javafx.model.BookEntity;
 
 public class HttpClient {
 
     
  // HTTP GET request
-    public List<BookEntity> findBooks(String title, String author) throws Exception {
-
-    	String param1 = "";
-    	String param2 = "";
+    public List<BookEntity> findBooks(String title, String author) throws HttpRequestException, IOException {
     	
-    	if(title!=null){
-    		param1=title;
-    	}
-    	if(author!=null){
-    		param2=author;
-    	}
+    	String param1 = ((title == null) ? "" : title);
+    	String param2 = ((author == null) ? "" : author);
     	
         URL url = new URL("http://localhost:8080/webstore/rest/findByTitleAndAuthor?title="+param1+"&author="+param2);
 
@@ -32,20 +27,19 @@ public class HttpClient {
 
         con.setRequestMethod("GET");
         
-
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
-        String inputLine;
         
         if (con.getResponseCode() != HttpURLConnection.HTTP_OK && con.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                + con.getResponseCode());
+            throw new HttpRequestException("Failed : HTTP error code : " + con.getResponseCode());
         }
-
+        
+        String inputLine;
         List<BookEntity> books = new ArrayList<BookEntity>();
         while ((inputLine = in.readLine()) != null) {
         	 books = ParserJSON.toBookEntity(inputLine.toString());
         }
+        
         in.close();
         con.disconnect();
 
@@ -53,7 +47,7 @@ public class HttpClient {
     }
     
  // HTTP POST request
-    public void addBook(String json) throws Exception {
+    public void addBook(String json) throws HttpRequestException, IOException {
   
         URL url = new URL("http://localhost:8080/webstore/rest/add");
 
@@ -67,7 +61,7 @@ public class HttpClient {
         os.flush();
         
         if (con.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-            throw new RuntimeException("Failed : HTTP error code : "
+            throw new HttpRequestException("Failed : HTTP error code : "
                 + con.getResponseCode());
         }
         
@@ -77,13 +71,9 @@ public class HttpClient {
     }
     
  // HTTP DELET request
-    public void remoweBook(String id) throws Exception {
+    public void remoweBook(String id) throws HttpRequestException, IOException {
   
-        String param1 = "";
-    	
-    	if(id!=null){
-    		param1=id;
-    	}
+    	String param1 = ((id == null) ? "" : id);
  
         URL url = new URL("http://localhost:8080/webstore/rest/delete?id="+param1);
 
@@ -93,7 +83,7 @@ public class HttpClient {
         con.connect();
          
         if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            throw new RuntimeException("Failed : HTTP error code : "
+            throw new HttpRequestException("Failed : HTTP error code : "
                 + con.getResponseCode());
         }
 

@@ -1,12 +1,12 @@
 package library.client.javafx.dataprovider.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
+import library.client.exception.HttpRequestException;
 import library.client.javafx.dataprovider.DataProvider;
 import library.client.javafx.dataprovider.data.BookVO;
 import library.client.javafx.dataprovider.data.StateVO;
@@ -22,10 +22,7 @@ import library.client.javafx.model.BookEntity;
  */
 public class DataProviderImpl implements DataProvider {
 
-	private static final Logger LOG = Logger.getLogger(DataProviderImpl.class);
-
 	private HttpClient httpClient = new HttpClient();
-	
 	private Collection<BookVO> books = new ArrayList<>();
 
 	public DataProviderImpl() {
@@ -33,35 +30,35 @@ public class DataProviderImpl implements DataProvider {
 	}
 
 	@Override
-	public Collection<BookVO> findBooks(String title, String author, StateVO state) throws Exception{
-		LOG.debug("Entering findbooks()");
-
+	public Collection<BookVO> findBooks(String title, String author, StateVO state) throws HttpRequestException, IOException{
 		List<BookEntity> entities = new ArrayList<BookEntity>();
-		
 		entities = httpClient.findBooks(title, author);
-		
 		books.clear();
 		for(BookEntity entity: entities){
 			books.add(new BookVO(entity.getId(), StateVO.valueOf(entity.getStatus()), entity.getAuthors(), entity.getTitle()));
 		}
 		
-		Collection<BookVO> result = books.stream().filter(p -> //
-		((state == null) || (state != null && p.getState() == state)) //
-		).collect(Collectors.toList());
+		Collection<BookVO> result = filterbyState(state);
 
 		return result;
 	}
 
 	@Override
-	public void addBook(String title, String author, String state) throws Exception {
-
+	public void addBook(String title, String author, String state) throws  HttpRequestException, IOException {
 		BookEntity book = new BookEntity(null, title, author, state);
-			httpClient.addBook(ParserJSON.toBookJson(book));
+		httpClient.addBook(ParserJSON.toBookJson(book));
 	}
 
 	@Override
-	public void deleteBook(String id) throws Exception {
-			httpClient.remoweBook(id);
+	public void deleteBook(String id) throws HttpRequestException, IOException  {
+		httpClient.remoweBook(id);
+	}
+	
+	private Collection<BookVO> filterbyState(StateVO state) {
+		Collection<BookVO> result = books.stream().filter(p -> //
+		((state == null) || (state != null && p.getState() == state)) //
+		).collect(Collectors.toList());
+		return result;
 	}
 
 }

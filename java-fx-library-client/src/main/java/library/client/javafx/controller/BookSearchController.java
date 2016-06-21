@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
@@ -70,7 +72,7 @@ public class BookSearchController {
 	private TableColumn<BookVO, String> stateColumn;
 
 	private final DataProvider dataProvider = DataProvider.INSTANCE;
-
+	
 	private final BookSearch model = new BookSearch();
 	private final BookAdd modelAdd = new BookAdd();
 	private String idSelectedBook = "";
@@ -102,7 +104,6 @@ public class BookSearchController {
 						.or(stateFieldNewBook.valueProperty().isEqualTo(State.ANY)));
 
 		deleteButton.setVisible(false);
-		;
 
 	}
 
@@ -186,10 +187,6 @@ public class BookSearchController {
 		});
 	}
 
-	private String getInternationalizedText(State state) {
-		return resources.getString("state." + state.name());
-	}
-
 	@FXML
 	private void searchBook(ActionEvent event) {
 		searchButtonActionVersion();
@@ -217,64 +214,71 @@ public class BookSearchController {
 			ComboBox<State> stateFieldNewBook) {
 
 		Task<Object> backgroundTask = new Task<Object>() {
-
 			@Override
 			protected Object call() throws Exception {
 
 				String title = titleFieldNewBook.getText();
 				String author = authorFieldNewBook.getText();
 				String state = stateFieldNewBook.getValue().toString();
-
-				try {
-					dataProvider.addBook(title, author, state);
-				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR, "Http PUT request Error!", ButtonType.OK);
-					alert.showAndWait();
-				}
+		
+				dataProvider.addBook(title, author, state);
 
 				return new Object();
 			}
-
+			                  
 			@Override
 			protected void succeeded() {
 				clearFields();
-
 				Alert alert = new Alert(AlertType.INFORMATION, "Book added successful :)", ButtonType.OK);
 				alert.showAndWait();
-
 			}
+			
+			@Override
+			protected void failed() {
+				clearFields();
+				showErrorAlert("Book cannot be added. Http server connection error.");
+			}
+				
 		};
-
+		
 		new Thread(backgroundTask).start();
 	}
+	
+	
 
+	private void showErrorAlert(String message){
+		Alert alert = new Alert(AlertType.ERROR, message, ButtonType.OK);
+		alert.showAndWait();
+	}
+	
 	private void searchButtonActionVersion() {
 
 		Task<Collection<BookVO>> backgroundTask = new Task<Collection<BookVO>>() {
-
 			@Override
 			protected Collection<BookVO> call() throws Exception {
 				Collection<BookVO> result = new ArrayList<BookVO>();
-				try {
-					result = dataProvider.findBooks( //
-							model.getTitle(), //
-							model.getAuthor(), //
+				
+					result = dataProvider.findBooks( 
+							model.getTitle(), 
+							model.getAuthor(), 
 							model.getState().toStateVO());
-				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR, "Http GET request Error!", ButtonType.OK);
-					alert.showAndWait();
-				}
+					
 				return result;
 			}
 
 			@Override
 			protected void succeeded() {
-
 				Collection<BookVO> result = getValue();
 				model.setResult(new ArrayList<BookVO>(result));
 				resultTable.getSortOrder().clear();
 				deleteButton.setVisible(false);
 			}
+			
+			@Override
+			protected void failed() {
+					showErrorAlert("Books cannot be searched. Http server connection error.");
+			}
+			
 		};
 
 		new Thread(backgroundTask).start();
@@ -286,25 +290,31 @@ public class BookSearchController {
 
 			@Override
 			protected Object call() throws Exception {
-				try {
+
 					dataProvider.deleteBook(id);
-				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR, "Http GET request Error!", ButtonType.OK);
-					alert.showAndWait();
-				}
+
 				return new Object();
 			}
 
 			@Override
 			protected void succeeded() {
 				searchButtonActionVersion();
-
 				Alert alert = new Alert(AlertType.INFORMATION, "Book deleted successful :)", ButtonType.OK);
 				alert.showAndWait();
 			}
+			
+			@Override
+			protected void failed() {
+					showErrorAlert("Book cannot be deleted. Http server connection error.");
+			}
+			
 		};
 
 		new Thread(backgroundTask).start();
+	}
+
+	private String getInternationalizedText(State state) {
+		return resources.getString("state." + state.name());
 	}
 
 }
