@@ -20,6 +20,7 @@ import library.client.javafx.dataprovider.data.BookVO;
  *
  * @author Tomek
  */
+// REV: ta klasa nie jest wykorzystywana
 public class ShowBook {
 
 	private final LongProperty id = new SimpleLongProperty();

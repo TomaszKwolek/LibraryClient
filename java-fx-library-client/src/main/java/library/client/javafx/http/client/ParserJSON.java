@@ -10,8 +10,11 @@ import java.lang.reflect.Type;
 import library.client.javafx.model.BookEntity;
 
 public class ParserJSON {
+	
+	// REV: unikaj static'ow
 
 	public static List<BookEntity> toBookEntity(String json){
+		// REV: ten obiekt powinien byc tworzony tylko raz, przy tworzeniu klasy
 		Gson g = new Gson();
 		BookEntity[] books =  g.fromJson(json, BookEntity[].class);
 		List<BookEntity> outputBooks = new ArrayList<BookEntity>();
@@ -23,6 +26,7 @@ public class ParserJSON {
 	
 	public static String toBookJson(BookEntity book){
 		String jsonBook = "";
+		// REV: j.w.
 	    Gson gson = new Gson();
 	    Type type = new TypeToken<BookEntity>() {}.getType();
 	    jsonBook = gson.toJson(book, type);

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 
 
+// REV: ta klasa nie jest modelem JavaFX, powinna byc zdefiniowana w pakiecie dataprovider
 public class BookEntity implements Serializable {
 
 	/**

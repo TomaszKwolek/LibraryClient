@@ -23,6 +23,7 @@ import library.client.javafx.model.BookEntity;
 public class DataProviderImpl implements DataProvider {
 
 	private HttpClient httpClient = new HttpClient();
+	// REV: nie ma potrzeby przechowywac wynikow jako zmiennej klasy
 	private Collection<BookVO> books = new ArrayList<>();
 
 	public DataProviderImpl() {
@@ -55,6 +56,7 @@ public class DataProviderImpl implements DataProvider {
 	}
 	
 	private Collection<BookVO> filterbyState(StateVO state) {
+		// REV: filtrowanie powinno byc robione po stronie serwera
 		Collection<BookVO> result = books.stream().filter(p -> //
 		((state == null) || (state != null && p.getState() == state)) //
 		).collect(Collectors.toList());

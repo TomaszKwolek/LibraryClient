@@ -169,10 +169,13 @@ public class BookSearchController {
 
 			@Override
 			public void changed(ObservableValue<? extends BookVO> observable, BookVO oldValue, BookVO newValue) {
+				// REV: lepiej zrobic to bindem
 				deleteButton.setVisible(idSelectedBook != null);
 
 				if (newValue != null) {
 					idSelectedBook = newValue.getId().toString();
+					
+					// REV: po co ten task skoro nic nie robi?
 					Task<Void> backgroundTask = new Task<Void>() {
 
 						@Override
@@ -217,6 +220,7 @@ public class BookSearchController {
 			@Override
 			protected Object call() throws Exception {
 
+				// REV: powinienes pobrac dane z modelu
 				String title = titleFieldNewBook.getText();
 				String author = authorFieldNewBook.getText();
 				String state = stateFieldNewBook.getValue().toString();
@@ -271,6 +275,7 @@ public class BookSearchController {
 				Collection<BookVO> result = getValue();
 				model.setResult(new ArrayList<BookVO>(result));
 				resultTable.getSortOrder().clear();
+				// REV: j.w.
 				deleteButton.setVisible(false);
 			}
 			

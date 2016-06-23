@@ -21,8 +21,10 @@ public class HttpClient {
     	String param1 = ((title == null) ? "" : title);
     	String param2 = ((author == null) ? "" : author);
     	
+    	// REV: adres powinien byc pobrany z konfiguracji
         URL url = new URL("http://localhost:8080/webstore/rest/findByTitleAndAuthor?title="+param1+"&author="+param2);
 
+        // REV: lepiej byloby wykorzystac jakis framework dla RESTow
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         con.setRequestMethod("GET");
@@ -37,9 +39,11 @@ public class HttpClient {
         String inputLine;
         List<BookEntity> books = new ArrayList<BookEntity>();
         while ((inputLine = in.readLine()) != null) {
+        	// REV: parsowanie powinny byc robione w DataProviderze
         	 books = ParserJSON.toBookEntity(inputLine.toString());
         }
         
+        // REV: nie zamykasz polaczenia, gdy wystapi blad
         in.close();
         con.disconnect();
 
@@ -49,8 +53,10 @@ public class HttpClient {
  // HTTP POST request
     public void addBook(String json) throws HttpRequestException, IOException {
   
+    	// REV: j.w.
         URL url = new URL("http://localhost:8080/webstore/rest/add");
 
+        // REV: j.w.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setDoOutput(true);
         con.setRequestMethod("POST");
@@ -65,6 +71,7 @@ public class HttpClient {
                 + con.getResponseCode());
         }
         
+        // REV: j.w.
         os.close();
         con.disconnect();
 
@@ -74,7 +81,7 @@ public class HttpClient {
     public void remoweBook(String id) throws HttpRequestException, IOException {
   
     	String param1 = ((id == null) ? "" : id);
- 
+    	// REV: j.w.
         URL url = new URL("http://localhost:8080/webstore/rest/delete?id="+param1);
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -87,6 +94,7 @@ public class HttpClient {
                 + con.getResponseCode());
         }
 
+        // REV: j.w.
         con.disconnect();
     }
 	

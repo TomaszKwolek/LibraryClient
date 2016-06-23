@@ -20,6 +20,7 @@ import library.client.javafx.dataprovider.data.BookVO;
  *
  * @author Tomek
  */
+// REV: ta klasa i ShowBook to dokladnie takie same klasy
 public class BookSearch {
 
 	private final LongProperty id = new SimpleLongProperty();
